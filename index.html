@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" type="text/css" href="./style.css">
+</head>
+
+<body>
+    <div class="main">
+
+        <div class="head">
+            <h1 class="heading">Quiz app</h1>
+            <div class="score">
+                <hr>
+                <p>score : 0</p>
+            </div>
+        </div>
+
+        <div class="question">
+            <div class="qstitle">
+                what is this?
+            </div>
+            <ul>
+                <li tabindex="0" onclick="answer('1')">hello</li>
+                <li tabindex="0" onclick="answer('2')">hello</li>
+                <li tabindex="0" onclick="answer('3')">hello</li>
+                <li tabindex="0" onclick="answer('4')">hello</li>
+            </ul>
+        </div>
+            <button>Next</button>
+    </div>
+    
+</body>
+<script>
+function answer(a){
+    console.log("clicked"+ a )
+
+}
+</script>
+
+</html>
