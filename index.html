@@ -15,28 +15,34 @@
             <h1 class="heading">Quiz app</h1>
             <div class="score">
                 <hr>
-                <p>score : 0</p>
+                <p>score :<span id="score"> 0 </span> / <span id="fail">0</span></p> 
+                <h2 id="category"></h2>
             </div>
         </div>
-
+       
         <div class="question">
             <div id="question-title">
-                what is this?
+                Are you ready to play?
             </div>
-            <ul  id="options-list">
-                <li tabindex="0" onclick="answer('1')">hello</li>
-                <li tabindex="0" onclick="answer('2')">hello</li>
-                <li tabindex="0" onclick="answer('3')">hello</li>
-                <li tabindex="0" onclick="answer('4')">hello</li>
+            <ul id="options-list">
+                <li tabindex="0">Click Next to Continue</li>
+
             </ul>
         </div>
-            <button onclick="nextQuestion()">Next</button>
+        <button id="btn" onclick="nextQuestion()">Next</button>
     </div>
-    
+
 </body>
 <script>
     let currentQuestionIndex = 0;
+    const category= document.getElementById('category');
+    const btn=document.getElementById('btn')
+    const failElement = document.getElementById('fail');
+    const scoreElement = document.getElementById('score');
     let score = 0;
+    let fail = 0;
+    const questionTitle = document.getElementById('question-title');
+    const optionsListElement = document.getElementById('options-list');
     let questions = [];
     async function nextQuestion() {
         let response = await fetch('https://the-trivia-api.com/v2/questions');
@@ -48,28 +54,65 @@
                 questions = result
                 // Log the parsed JSON data to the console
                 console.log(questions);
-                displayQuestion();}
-            else {
-                    console.log('wrong')
-                }
-                // You can update the UI with the fetched question data here
-            } else {
-                // Handle the case where the API response is not successful
-                console.error('Failed to fetch question. Status:', response.status);
+                displayQuestion();
             }
+            else {
+                console.log('wrong')
+            }
+            // You can update the UI with the fetched question data here
+        } else {
+            // Handle the case where the API response is not successful
+            console.error('Failed to fetch question. Status:', response.status);
+        }
+
+    }
+    function displayQuestion() {
+        if (currentQuestionIndex < questions.length) {
+
+            questionTitle.textContent = questions[currentQuestionIndex].question.text;
+            optionsListElement.innerHTML = "";
+            const allOptions = [...questions[currentQuestionIndex].incorrectAnswers, questions[currentQuestionIndex].correctAnswer]
+            allOptions.sort(() => Math.random() - 0.5);
+            category.textContent=questions[currentQuestionIndex].category;
+            allOptions.forEach((option, index) => {
+                const liElement = document.createElement('li');
+                liElement.textContent = option;
+                liElement.tabIndex = 0;
+                liElement.onclick = () => answer(option);
+                optionsListElement.appendChild(liElement);
+                btn.textContent="skip";
+            })
+        } else {
+            questionTitle.textContent = "Quiz complete!";
+            optionsListElement.textContent="";                
+            btn.textContent="Try another quiz";
+            btn.onclick = () => {
+        location.reload();
+    };
+        }
+    }
+    function answer(selectedOption) {
+        if (questions[currentQuestionIndex].correctAnswer === selectedOption) {
+            console.log("correct answer");
+            currentQuestionIndex++;
+            score++;
+            console.log("Current score:", score);
+
+            // Update the score on the webpage
+            scoreElement.textContent = `${score}`;
+            displayQuestion();
+        }
+        else if (questions[currentQuestionIndex].incorrectAnswers.includes(selectedOption)) {
+            currentQuestionIndex++;
+            fail++;
+            failElement.textContent = `${fail}`;
+            displayQuestion();
 
         }
-        function displayQuestion() {
-            if (currentQuestionIndex < questions.length) {
-                const questionTitle = document.getElementById('question-title');
-                const optionsListElement = document.getElementById('options-list');
-                questionTitle.textContent = questions[currentQuestionIndex].question.text;
-                optionsListElement.innerHTML = "";
-                const allOptions=[...questions[currentQuestionIndex].correctAnswer,questions[currentQuestionIndex].incorrectAnswers]
-                allOptions.sort(() => Math.random() - 0.5);
-                
-            }
+        else {
+            console.log("wrong answer");
         }
+    }
 </script>
 
 </html>

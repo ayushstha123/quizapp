@@ -37,12 +37,15 @@ p{
 .question {
   text-align: start;
   padding: 2rem;
+  margin-top: 3rem;
 }
 
 .qstitle {
   font-size: 2rem; /* Adjust the font size as needed */
   font-weight: bold;
   margin-bottom: 1rem;
+ 
+  
 }
 
 ul {
@@ -57,6 +60,14 @@ li {
   box-shadow: 0.5rem 0.5rem black;
   transition: 0.2s;
 
+}
+#category{
+    font-size: 1rem;
+    float: left;
+    margin-left: 1rem;
+    padding: 0.8rem;
+    border-radius: 5rem;
+    background-color: rgb(167, 167, 190);
 }
 li:hover,
 li:focus{
