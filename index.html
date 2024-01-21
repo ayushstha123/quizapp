@@ -20,25 +20,56 @@
         </div>
 
         <div class="question">
-            <div class="qstitle">
+            <div id="question-title">
                 what is this?
             </div>
-            <ul>
+            <ul  id="options-list">
                 <li tabindex="0" onclick="answer('1')">hello</li>
                 <li tabindex="0" onclick="answer('2')">hello</li>
                 <li tabindex="0" onclick="answer('3')">hello</li>
                 <li tabindex="0" onclick="answer('4')">hello</li>
             </ul>
         </div>
-            <button>Next</button>
+            <button onclick="nextQuestion()">Next</button>
     </div>
     
 </body>
 <script>
-function answer(a){
-    console.log("clicked"+ a )
+    let currentQuestionIndex = 0;
+    let score = 0;
+    let questions = [];
+    async function nextQuestion() {
+        let response = await fetch('https://the-trivia-api.com/v2/questions');
 
-}
+        // Check if the response is successful
+        if (response.ok) {
+            let result = await response.json();
+            if (result && Array.isArray(result)) {
+                questions = result
+                // Log the parsed JSON data to the console
+                console.log(questions);
+                displayQuestion();}
+            else {
+                    console.log('wrong')
+                }
+                // You can update the UI with the fetched question data here
+            } else {
+                // Handle the case where the API response is not successful
+                console.error('Failed to fetch question. Status:', response.status);
+            }
+
+        }
+        function displayQuestion() {
+            if (currentQuestionIndex < questions.length) {
+                const questionTitle = document.getElementById('question-title');
+                const optionsListElement = document.getElementById('options-list');
+                questionTitle.textContent = questions[currentQuestionIndex].question.text;
+                optionsListElement.innerHTML = "";
+                const allOptions=[...questions[currentQuestionIndex].correctAnswer,questions[currentQuestionIndex].incorrectAnswers]
+                allOptions.sort(() => Math.random() - 0.5);
+                
+            }
+        }
 </script>
 
 </html>
